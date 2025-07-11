@@ -12,18 +12,20 @@ class NotesRepository {
     try {
       if (_currentUserId == null) throw Exception('User not authenticated');
 
-      final querySnapshot = await _firestore
-          .collection('notes')
-          .where('userId', isEqualTo: _currentUserId)
-          // Temporarily commented out while index builds
-          // .orderBy('updatedAt', descending: true)
-          .get();
+      final querySnapshot =
+          await _firestore
+              .collection('notes')
+              .where('userId', isEqualTo: _currentUserId)
+              // Temporarily commented out while index builds
+              // .orderBy('updatedAt', descending: true)
+              .get();
 
-      final notes = querySnapshot.docs.map((doc) => Note.fromFirestore(doc)).toList();
-      
+      final notes =
+          querySnapshot.docs.map((doc) => Note.fromFirestore(doc)).toList();
+
       // Sort in Dart as fallback while index builds
       notes.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
-      
+
       return notes;
     } catch (e) {
       throw Exception('Failed to fetch notes: $e');
